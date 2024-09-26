@@ -1,6 +1,6 @@
 *.env
 *venv
 *node_modules
-
+*.svelte-kit
 
 *__pycache__
