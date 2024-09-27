@@ -32,8 +32,8 @@ npm run dev
 next times
 
 ```bash
-cd backend
+cd frontend
 npm run dev
 ```
 
-Open [http://localhost:5173/](http://localhost:5173/) with your browser to see swagger.
+Open [http://localhost:5173/](http://localhost:5173/) with your browser to page.
