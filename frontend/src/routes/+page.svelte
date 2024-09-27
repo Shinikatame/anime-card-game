@@ -1,88 +1,72 @@
 <script>
-    import { onMount } from "svelte"
-
-    let data = []
-
-    const query = `
-        query {
-            Page (page: 1, perPage: 50) {
-                pageInfo {
-                    total
-                    currentPage
-                    lastPage
-                    hasNextPage
-                }
-
-                characters {    
-                    id
-                    name {
-                        first
-                        middle
-                        last
-                        full
-                        userPreferred
-                    }
-                    image {
-                        medium
-                        large
-                    }
-                    description
-                    gender
-                    age
-                    dateOfBirth {
-                        year
-                        month
-                        day
-                    }
-                    bloodType
-                    favourites
-                }
-            }
-        }
-    `
-
-    const options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-            query: query,
-            variables: {
-                id: 15125
-            }
-        })
-    }
+    import ImagemListona from '../lib/components/ImagemListona.svelte'; 
+    let characters = []; 
+    let showImages = false; 
 
     async function fetchData() {
-        try {
-            const response = await fetch('https://graphql.anilist.co', options)
-            data = await response.json()
+        const query = `
+            query {
+                Page(page: 1, perPage: 50) {
+                    characters {
+                        id
+                        name {
+                            full
+                        }
+                        image {
+                            large
+                        }
+                    }
+                }
+            }
+        `;
 
-            console.log(data)
-        } catch (error) {
-            console.error("Erro ao buscar dados:", error)
-        }
+        const response = await fetch('https://graphql.anilist.co', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ query })
+        });
+
+        const data = await response.json();
+        characters = data.data.Page.characters; 
+        showImages = true; 
     }
-
-    onMount(() => {
-        fetchData()
-    })
 </script>
 
-<template>
-    HELLO EVERYONE
-</template>
 
-    <!-- <div>
-    {#if data.length > 0}
-      <ul>
-        {#each data as item}
-          <li>{item.name}</li>
-        {/each}
-      </ul>
-    {:else}
-      <p>Carregando dados...</p>
-    {/if}
-  </div> -->
+{#if !showImages} 
+    <div class="button-container">
+        <button class="fetch-button" on:click={fetchData}>Clique Aqui</button>
+    </div>
+{/if}
+
+
+{#if showImages} 
+    <ImagemListona {characters} /> 
+{/if}
+
+<style>
+    .button-container {
+        display: flex;                
+        justify-content: center;      
+        align-items: center;          
+        height: 100vh;                
+    }
+
+    .fetch-button {
+        background-color: #6a0dad; 
+        color: white;              
+        border: none;              
+        border-radius: 8px;       
+        padding: 12px 24px;      
+        font-size: 18px;          
+        cursor: pointer;          
+        transition: background-color 0.3s; 
+    }
+
+    .fetch-button:hover {
+        background-color: #5a0ca6;
+    }
+</style>
