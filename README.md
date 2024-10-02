@@ -1,3 +1,5 @@
+# COMO INICIAR O PROJETO PARA DUMBS
+
 ## Getting Started
 
 First, run the backend development server:
